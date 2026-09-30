@@ -1,9 +1,9 @@
 /** Shared configuration for the Little Note sticker. */
 
 /** Spring Boot backend that owns rooms and relays notes. */
-export const API_HOST = 'localhost'
-export const API_PORT = 8080
-export const API_BASE_URL = `http://${API_HOST}:${API_PORT}`
+export const API_HOST = 'little-note.onrender.com'
+export const API_PORT = 443
+export const API_BASE_URL = `https://${API_HOST}`
 
 /** WebSocket path registered by WebSocketConfig on the backend. */
 export const SOCKET_PATH = '/ws'

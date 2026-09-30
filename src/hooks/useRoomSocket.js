@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   API_HOST,
-  API_PORT,
   RECONNECT_BASE_DELAY_MS,
   RECONNECT_MAX_DELAY_MS,
   SOCKET_PATH,
@@ -14,14 +13,16 @@ export const SOCKET_STATUS = {
 }
 
 function buildSocketUrl(roomCode, roomId, userId) {
-  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-  const host = window.location.hostname || API_HOST
+  const protocol = 'wss:'
+  const host = API_HOST
+
   const query = new URLSearchParams({
     roomCode,
     roomId: String(roomId),
     userId: String(userId),
   })
-  return `${protocol}//${host}:${API_PORT}${SOCKET_PATH}?${query.toString()}`
+
+  return `${protocol}//${host}${SOCKET_PATH}?${query.toString()}`
 }
 
 /**
@@ -56,7 +57,6 @@ export function useRoomSocket({ roomCode, roomId, userId, isActive, onNoteReceiv
 
   useEffect(() => {
     if (!isActive || !hasIdentity) {
-      // Nothing to synchronise while the sticker is not on a room screen.
       return undefined
     }
 
@@ -74,7 +74,12 @@ export function useRoomSocket({ roomCode, roomId, userId, isActive, onNoteReceiv
       if (isDisposed) {
         return
       }
-      const delay = Math.min(RECONNECT_BASE_DELAY_MS * 2 ** attempt, RECONNECT_MAX_DELAY_MS)
+
+      const delay = Math.min(
+        RECONNECT_BASE_DELAY_MS * 2 ** attempt,
+        RECONNECT_MAX_DELAY_MS,
+      )
+
       attempt += 1
       console.info('[little note] socket reconnecting in', delay, 'ms')
       reconnectTimerRef.current = setTimeout(connect, delay)
@@ -89,6 +94,7 @@ export function useRoomSocket({ roomCode, roomId, userId, isActive, onNoteReceiv
       console.info('[little note] socket connecting', url)
 
       let socket
+
       try {
         socket = new WebSocket(url)
       } catch (error) {
@@ -109,6 +115,7 @@ export function useRoomSocket({ roomCode, roomId, userId, isActive, onNoteReceiv
 
       socket.onmessage = (event) => {
         let payload
+
         try {
           payload = JSON.parse(event.data)
         } catch {
@@ -120,8 +127,15 @@ export function useRoomSocket({ roomCode, roomId, userId, isActive, onNoteReceiv
           return
         }
 
-        console.info('[little note] note received from your person', { fromUserId: payload.userId })
-        onNoteReceivedRef.current?.(payload.text ?? '', Number(payload.userId), payload.username ?? '')
+        console.info('[little note] note received from your person', {
+          fromUserId: payload.userId,
+        })
+
+        onNoteReceivedRef.current?.(
+          payload.text ?? '',
+          Number(payload.userId),
+          payload.username ?? '',
+        )
       }
 
       socket.onerror = () => {
@@ -132,6 +146,7 @@ export function useRoomSocket({ roomCode, roomId, userId, isActive, onNoteReceiv
         if (socketRef.current === socket) {
           socketRef.current = null
         }
+
         setLiveStatus(SOCKET_STATUS.closed)
         console.info('[little note] socket closed', { code: event.code })
         scheduleReconnect()
@@ -146,8 +161,8 @@ export function useRoomSocket({ roomCode, roomId, userId, isActive, onNoteReceiv
 
       const socket = socketRef.current
       socketRef.current = null
+
       if (socket) {
-        // Detach first so the deliberate teardown does not trigger a reconnect.
         socket.onopen = null
         socket.onmessage = null
         socket.onerror = null
@@ -162,6 +177,7 @@ export function useRoomSocket({ roomCode, roomId, userId, isActive, onNoteReceiv
   const sendNote = useCallback(
     (text) => {
       const socket = socketRef.current
+
       if (!socket || socket.readyState !== WebSocket.OPEN) {
         console.warn('[little note] cannot send, socket is not open')
         return false
@@ -176,13 +192,20 @@ export function useRoomSocket({ roomCode, roomId, userId, isActive, onNoteReceiv
           text,
         }),
       )
+
       console.info('[little note] note sent to your person')
       return true
     },
     [roomCode, roomId, userId],
   )
 
-  const status = isActive && hasIdentity ? liveStatus : SOCKET_STATUS.closed
+  const status = isActive && hasIdentity
+    ? liveStatus
+    : SOCKET_STATUS.closed
 
-  return { status, isConnected: status === SOCKET_STATUS.open, sendNote }
+  return {
+    status,
+    isConnected: status === SOCKET_STATUS.open,
+    sendNote,
+  }
 }

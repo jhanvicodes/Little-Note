@@ -19,7 +19,9 @@
     "electron:dev": "concurrently --names vite,electron \"vite --host 0.0.0.0 --port 5173 --strictPort\" \"wait-on tcp:5173 && electron .\"",
     "electron": "electron .",
     "package": "npm run build && electron-forge package",
-    "make": "npm run build && electron-forge make"
+    "make": "npm run build && electron-forge make",
+    "package:win": "npm run build && electron-forge package --platform=win32 --arch=x64",
+    "make:win": "npm run build && electron-forge make --platform=win32 --arch=x64 --targets=@electron-forge/maker-zip"
   },
   "config": {
     "forge": {
@@ -49,6 +51,12 @@
         ]
       },
       "makers": [
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "win32"
+          ]
+        },
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
