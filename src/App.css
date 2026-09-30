@@ -1,0 +1,673 @@
+/* ===== window shell (fixed 250x290 sticker) ===== */
+.desktop-shell {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.sticker {
+  position: relative;
+  flex: none;
+  width: 250px;
+  height: 290px;
+  background: #bcd0d9;
+  overflow: hidden;
+  -webkit-app-region: drag;
+  box-sizing: border-box;
+}
+
+/* ===== header: LITTLE NOTE ♥ + pixel buttons ===== */
+.title-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 0 11px;
+}
+
+.title-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 8px;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.title-heart {
+  display: block;
+}
+
+.title-heart rect {
+  fill: currentColor;
+}
+
+.window-controls {
+  display: flex;
+  gap: 4px;
+  -webkit-app-region: no-drag;
+}
+
+.window-button {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #dfe8ec;
+  background: transparent;
+  color: #dfe8ec;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 7px;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-app-region: no-drag;
+}
+
+.window-button:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.window-button:active {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+/* ===== scene: pixel background + everything inside the frame ===== */
+.scene {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 30px;
+  bottom: 6px;
+  background-image: url('./assets/scene.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  box-shadow: inset 0 0 0 2px #3c386c;
+  overflow: hidden;
+}
+
+/* ===== tabs: note / setup ===== */
+.tab-row {
+  position: absolute;
+  top: 18px;
+  left: 0;
+  right: 0;
+  height: 23px;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  z-index: 4;
+  -webkit-app-region: no-drag;
+}
+
+.tab {
+  height: 23px;
+  padding: 0 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 8px;
+  line-height: 1;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.32);
+  box-shadow: inset 0 0 0 2px #bf8da6;
+  border: none;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+.tab.active {
+  background: #bf8da6;
+  box-shadow: none;
+}
+
+.tab:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.45);
+}
+/* ===== speech box: latest note (cream, ink border, pixel shadow + tail) ===== */
+.speech-wrap {
+  position: absolute;
+  top: 53px;
+  left: 16px;
+  right: 17px;
+  z-index: 2;
+}
+
+.speech-box {
+  position: relative;
+  height: 64px;
+  background: #f5e9d5;
+  border: 2px solid #2d2a5b;
+  box-shadow: 3px 3px 0 #3e3a6f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4px 8px;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 8px;
+  line-height: 1.5;
+  color: #2d2a5b;
+  word-break: break-word;
+  overflow: hidden;
+}
+
+.speech-empty {
+  color: #8880a4;
+}
+
+.speech-tail {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: #f5e9d5;
+  border-right: 2px solid #2d2a5b;
+  border-bottom: 2px solid #2d2a5b;
+  transform: translateX(-50%) rotate(45deg);
+  z-index: 3;
+}
+
+/* ===== cats: side by side on the ground, lower scene ===== */
+.cat-row {
+  position: absolute;
+  left: 57px;
+  right: 58px;
+  bottom: 67px;
+  height: 55px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cat {
+  height: 55px;
+  width: auto;
+  display: block;
+  image-rendering: pixelated;
+  user-select: none;
+}
+
+/* Each name sits under its own cat; the slots keep the cats exactly where they were. */
+.cat-slot {
+  position: relative;
+  display: block;
+  height: 55px;
+}
+
+.cat-name {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 2px;
+  max-width: 54px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 5px;
+  line-height: 1;
+  color: #5a5170;
+  text-align: center;
+}
+
+/* ===== error chip (note screen) ===== */
+.error-message {
+  position: absolute;
+  top: 116px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 86%;
+  background: #f6d0d6;
+  border: 2px solid #a83b55;
+  color: #7d2b40;
+  padding: 3px 6px;
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.1;
+  text-align: center;
+  z-index: 6;
+  -webkit-app-region: no-drag;
+}
+
+/* ===== bottom input row ===== */
+.note-input-row {
+  position: absolute;
+  left: 13px;
+  right: 13px;
+  bottom: 14px;
+  height: 29px;
+  display: flex;
+  gap: 7px;
+  z-index: 3;
+  -webkit-app-region: no-drag;
+}
+
+.note-input {
+  flex: 1;
+  min-width: 0;
+  height: 29px;
+  background: #fef8f2;
+  border: 2px solid #2d2a5b;
+  padding: 0 7px;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 7px;
+  color: #2d2a5b;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.note-input::placeholder {
+  color: #8880a4;
+}
+
+.send-button {
+  width: 56px;
+  height: 29px;
+  background: #bcd0d9;
+  border: 2px solid #2d2a5b;
+  box-shadow: 3px 3px 0 #bf8ca4;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 7px;
+  line-height: 1;
+  color: #2d2a5b;
+  cursor: pointer;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.send-button:active:not(:disabled) {
+  box-shadow: 1px 1px 0 #bf8ca4;
+  transform: translate(2px, 2px);
+}
+
+.send-button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+/* ===== landing page: purple night + cats + beating heart, cream form below ===== */
+.setup-panel {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  -webkit-app-region: no-drag;
+}
+
+/* The tab row is pointless before a room exists, and the landing page has none. */
+.scene:has(.setup-panel) .tab-row {
+  display: none;
+}
+
+/* --- purple stage: subtitle, sparks, cats, heart --- */
+.landing-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  box-sizing: border-box;
+  background: #5a4f86;
+  border-bottom: 1px solid #3c386c;
+  overflow: hidden;
+}
+
+.landing-spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #f9f2dc;
+}
+
+.landing-spark-a {
+  top: 33px;
+  right: 12px;
+}
+
+.landing-spark-b {
+  top: 49px;
+  left: 22px;
+}
+
+.landing-spark-c {
+  top: 89px;
+  right: 19px;
+}
+
+.setup-header {
+  position: absolute;
+  top: 21px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.setup-subtitle {
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 15px;
+  line-height: 1.1;
+  color: #f9f2dc;
+  max-width: 182px;
+  margin: 0 auto;
+}
+
+.landing-cats {
+  position: absolute;
+  left: 13px;
+  right: 10px;
+  bottom: 0;
+  height: 52px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.landing-cat {
+  height: 52px;
+  width: auto;
+  display: block;
+  image-rendering: pixelated;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* --- the heart between the cats: big one pumps forever, scale only --- */
+.landing-hearts {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  pointer-events: none;
+}
+
+.landing-heart {
+  display: block;
+}
+
+.landing-heart rect {
+  fill: currentColor;
+}
+
+.landing-heart-beat {
+  width: 33px;
+  height: 29px;
+  color: #f2a3bc;
+  transform-origin: 50% 62%;
+  animation: landing-heart-pump 1100ms ease-in-out infinite;
+}
+
+.landing-heart-echo {
+  width: 9px;
+  height: 8px;
+  color: #8574c2;
+  align-self: flex-start;
+  margin-top: 3px;
+}
+
+.landing-heart-tiny {
+  width: 8px;
+  height: 7px;
+  color: #f2a3bc;
+  align-self: center;
+  margin-top: 5px;
+}
+
+@keyframes landing-heart-pump {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+/* --- cream ground, flat with a straight top edge --- */
+.landing-ground {
+  position: absolute;
+  top: 120px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f9f2dc;
+}
+
+.landing-strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  background: #f2b8c8;
+}
+
+/* --- form: name field, then the two ways in (offset inside the ground) --- */
+.landing-form {
+  position: absolute;
+  top: 15px;
+  left: 16px;
+  right: 17px;
+  bottom: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Keep the labels for screen readers only: the fields carry their own placeholder. */
+.field-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.setup-panel .error-message {
+  position: static;
+  transform: none;
+  max-width: 100%;
+  width: 100%;
+  flex: none;
+}
+
+.name-input {
+  width: 100%;
+  height: 27px;
+  flex: 0 1 27px;
+  min-height: 20px;
+  background: #fef8f2;
+  border: 2px solid #2d2a5b;
+  padding: 0 6px;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 7px;
+  color: #2d2a5b;
+  outline: none;
+  box-sizing: border-box;
+  -webkit-app-region: no-drag;
+}
+
+.name-input::placeholder {
+  color: #8880a4;
+}
+
+.action-stack {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 8px;
+}
+
+.primary-button,
+.secondary-button {
+  height: 27px;
+  flex: 0 1 27px;
+  min-height: 20px;
+  border: 2px solid #2d2a5b;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 7px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  -webkit-app-region: no-drag;
+}
+
+.primary-button {
+  background: #f0aec0;
+  color: #2d2a5b;
+  box-shadow: 2px 2px 0 #d98fa6;
+}
+
+.secondary-button {
+  background: #cfe0ec;
+  color: #2d2a5b;
+  box-shadow: 2px 2px 0 #a9c4d4;
+}
+
+.primary-button:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.secondary-button:hover {
+  filter: brightness(1.05);
+}
+
+.primary-button:active:not(:disabled) {
+  box-shadow: none;
+  transform: translate(2px, 2px);
+}
+
+.secondary-button:active {
+  box-shadow: none;
+  transform: translate(2px, 2px);
+}
+
+.primary-button:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* ===== room code screen: cream pixel box, no cats (copy auto-advances) ===== */
+.room-box {
+  position: absolute;
+  top: 41px;
+  left: 16px;
+  right: 17px;
+  bottom: 14px;
+  background: #f5e9d5;
+  border: 2px solid #2d2a5b;
+  box-shadow: 3px 3px 0 #3e3a6f;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  color: #2d2a5b;
+  z-index: 2;
+  -webkit-app-region: no-drag;
+}
+
+.room-label {
+  font-size: 6px;
+  letter-spacing: 0.5px;
+  color: #3d396d;
+}
+
+.room-code {
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 10px;
+  color: #2d2a5b;
+  letter-spacing: 1px;
+  word-break: break-all;
+}
+
+.copy-button {
+  min-width: 56px;
+  height: 22px;
+  padding: 0 8px;
+  background: #bcd0d9;
+  border: 2px solid #2d2a5b;
+  box-shadow: 3px 3px 0 #bf8ca4;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 7px;
+  line-height: 1;
+  color: #2d2a5b;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+.copy-button:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.room-status {
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.1;
+  color: #5a5170;
+}
+
+.room-box .error-message {
+  position: static;
+  transform: none;
+  max-width: 100%;
+}
+
+/* ===== focus ===== */
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #3e3a6f;
+  outline-offset: 1px;
+}
+
+/* ===== sender cat jump: transform only, the cat returns to its exact spot ===== */
+.cat-jump {
+  animation: cat-jump 520ms ease-in-out;
+}
+
+@keyframes cat-jump {
+  0% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-7px);
+  }
+  40% {
+    transform: translateY(-12px);
+  }
+  70% {
+    transform: translateY(-3px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+

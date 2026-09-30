@@ -1,0 +1,86 @@
+{
+  "name": "little-note",
+  "productName": "Little Note",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A tiny private space for two people.",
+  "author": {
+    "name": "Little Note",
+    "email": "hello@littlenote.app"
+  },
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 5173 --strictPort",
+    "build": "vite build",
+    "lint": "oxlint .",
+    "preview": "vite preview --host 0.0.0.0 --port 4173 --strictPort",
+    "electron:dev": "concurrently --names vite,electron \"vite --host 0.0.0.0 --port 5173 --strictPort\" \"wait-on tcp:5173 && electron .\"",
+    "electron": "electron .",
+    "package": "npm run build && electron-forge package",
+    "make": "npm run build && electron-forge make"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "name": "Little Note",
+        "executableName": "Little Note",
+        "appBundleId": "com.littlenote.app",
+        "appCategoryType": "public.app-category.social-networking",
+        "asar": true,
+        "appVersion": "1.0.0",
+        "ignore": [
+          "/\\.git(/|$)",
+          "/\\.github(/|$)",
+          "/\\.vscode(/|$)",
+          "/\\.venv(/|$)",
+          "/\\.DS_Store",
+          "/\\.gitignore",
+          "/\\.env.example",
+          "/\\.oxlintrc.json",
+          "/README.md",
+          "/vite.config.js",
+          "/backend(/|$)",
+          "/src(/|$)",
+          "/public(/|$)",
+          "/out(/|$)",
+          "/dist-ssr(/|$)"
+        ]
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "LittleNote",
+            "setupExe": "LittleNote-Setup.exe"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin",
+            "linux"
+          ]
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^8.0.1",
+    "@electron-forge/maker-squirrel": "^8.0.1",
+    "@electron-forge/maker-zip": "^8.0.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "concurrently": "^10.0.5",
+    "electron": "^44.4.5",
+    "oxlint": "^1.81.0",
+    "vite": "^8.3.0",
+    "wait-on": "^9.1.0"
+  }
+}
